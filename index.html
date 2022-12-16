@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Metadata -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- Judul pada tab browser -->
+    <title>LeafletJS</title>
+
+    <!-- Leaflet CSS Library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+
+    <!-- Style untuk tampilan peta fullscreen -->
+    <style>
+        html,
+        body,
+        #map {
+            height: 500px;
+            width: 100%;
+            margin: 0px;
+        }
+
+        #button-area {
+            width: 100%;
+            height: 200px;
+            margin: 0px;
+            text-align: center;
+        }
+
+        button {
+            width: 100px;
+            height: 50px;
+            margin: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Leaflet JavaScript Library -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- HTML Block untuk menampilkan peta -->
+    <div id="map"></div>
+
+    <div id="button-area">
+    <button onclick="changemap(0.1242137,110.6082124,13,'Kabupaten Sanggau','https://cdn-2.tstatic.net/pontianak/foto/bank/images/kantor-bupati-sanggau.jpg')">SANGGAU</button>
+    <button onclick="changemap(-0.7240076,111.7883192,13,'Kabupaten Melawi', 'https://www.celebes.co/borneo/wp-content/uploads/2020/01/Tempat-Wisata-Melawi.jpg')">MELAWI</button>
+    <button onclick="changemap(-0.0300407,109.3297577,13,'Kota Pontianak', 'https://www.tagar.id/Asset/uploads/433904-kota-pontianak.jpeg')">PONTIANAK</button>
+    </div>
+
+    <script>
+        /* Initial Map */
+        var centermap = [0.0241184, 110.8906746];
+        var map = L.map('map').setView(centermap, 13); //lat, long, zoom
+
+        /* Tile Basemap */
+        var basemap1 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            //attribution akan muncul di pojok kanan bawah
+            attribution: '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | <a href="https://www.unsorry.net" target="_blank">unsorry@2022</a>'
+        });
+        var basemap2 = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        });
+        var basemap3 = L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            attribution: '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+        basemap2.addTo(map); //Memanggil basemap untuk ditampilkan ketika halaman dipanggil
+
+        /* Marker */
+        var marker = L.marker(centermap); //lat, long
+        marker.addTo(map); //Marker ditampilkan ketika halaman dipanggil
+        /* Popup Marker */
+        marker.bindPopup('Kabupaten Sekadau, Kalimantan Barat <br>' + centermap);
+
+        var baseMaps = { //list basemap
+            'openstreetmap.org': basemap1,
+            'World_Imagery': basemap2,
+            'openstreetmap.fr': basemap3
+        };
+        var Layers = {  //list layer
+        };
+        var layerControl = L.control.layers(baseMaps, Layers, { collapsed: false });
+        layerControl.addTo(map);
+
+        // untuk mengubah peta
+        function changemap(lat, long, zoom, Kabupaten, imageurl) {
+            map.flyTo([lat, long], zoom)
+            //untuk memindah marker
+            marker.setLatLng([lat, long]) ;
+            marker.bindPopup( Kabupaten + "<br>" + [lat, long] + "<br><img src='" + imageurl + "' width='200px'>") ;
+        marker.openPopup();
+        }
+    </script>
+</body>
+
+</html>
